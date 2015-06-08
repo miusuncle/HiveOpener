@@ -1,13 +1,15 @@
 import sublime, sublime_plugin
 from os import path
 
+SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
+
 class HiveOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
         self.init()
         self.show_quick_panel()
 
     def init(self):
-        settings = sublime.load_settings('HiveOpener.sublime-settings')
+        settings = sublime.load_settings(SETTINGS_BASE_NAME)
         self.peek_file = settings.get('peek_file', False)
         self.items = []
 
