@@ -1,0 +1,30 @@
+[{
+    "id": "tools",
+    "children": [
+        {
+            "caption": "Hive Opener",
+            "children": [
+                {
+                    "caption": "Show Open List",
+                    "command": "hive_open"
+                },
+
+                { "caption": "-" },
+                {
+                    "caption": "Hive Opener Default Settings",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/HiveOpener/HiveOpener.sublime-settings"
+                    }
+                },
+                {
+                    "caption": "Hive Opener User Settings",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/User/HiveOpener.sublime-settings"
+                    }
+                }
+            ]
+        }
+    ]
+}]

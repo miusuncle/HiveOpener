@@ -1,0 +1,11 @@
+{
+    "peek_file": false,
+
+    "dirs": [
+        ["C:\\Windows\\System32\\drivers\\etc", "windows_hosts_dir"]
+    ],
+
+    "files": [
+        ["C:\\Windows\\System32\\drivers\\etc\\hosts", "windows_hosts_file"]
+    ]
+}
