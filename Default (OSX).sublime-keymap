@@ -1,0 +1,9 @@
+[
+    { "keys": ["alt+shift+o"], "command": "hive_open" },
+
+    {
+        "keys": ["alt+shift+i"],
+        "command": "open_file",
+        "args": { "file": "${packages}/User/HiveOpener.sublime-settings" }
+    }
+]

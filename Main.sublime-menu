@@ -14,7 +14,16 @@
                     "caption": "Hive Opener Default Settings",
                     "command": "open_file",
                     "args": {
-                        "file": "${packages}/HiveOpener/HiveOpener.sublime-settings"
+                        "file": "${packages}/HiveOpener/HiveOpener (Windows).sublime-settings",
+                        "platform": "Windows"
+                    }
+                },
+                {
+                    "caption": "Hive Opener Default Settings",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/HiveOpener/HiveOpener (OSX).sublime-settings",
+                        "platform": "OSX"
                     }
                 },
                 {

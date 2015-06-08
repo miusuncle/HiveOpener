@@ -1,0 +1,11 @@
+{
+    "peek_file": false,
+
+    "dirs": [
+        ["/etc", "osx_hosts_dir"]
+    ],
+
+    "files": [
+        ["/etc/hosts", "osx_hosts_file"]
+    ]
+}

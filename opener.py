@@ -55,8 +55,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             import subprocess
             subprocess.Popen(['explorer', dirname])
         elif sublime.platform() == 'osx':
-            # TODO: add support for `osx`
-            pass
+            self.window.run_command('open_dir', { 'dir': dirname })
 
     def get_name_by_index(self, index):
         return self.items[index][0]
