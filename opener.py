@@ -37,10 +37,13 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             self.view_items.append([title, subtitle])
 
     def get_desc_type(self, pathname):
-        if path.isdir(pathname): return 'DIR'
-
         basename = path.basename(pathname)
         name, ext = path.splitext(basename)
+
+        if USER_PLATFORM == 'osx' and ext == '.app':
+            return 'APP'
+
+        if path.isdir(pathname): return 'DIR'
         return ext[1:].upper() or 'FILE'
 
     def show_quick_panel(self):
@@ -54,6 +57,11 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             return self.restore_view() if self.peek_file else self.noop()
 
         item_name = self.get_name_by_index(index)
+        name, ext = path.splitext(item_name)
+
+        if USER_PLATFORM == 'osx' and ext == '.app':
+            self.open_binary_file(item_name)
+            return
 
         if path.isfile(item_name):
             self.open_file(item_name)
@@ -90,8 +98,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         if USER_PLATFORM == 'windows':
             subprocess.Popen(['explorer', filename])
         elif USER_PLATFORM == 'osx':
-            # TODO: add `open_binary_file` support for osx
-            pass
+            subprocess.Popen(['open', filename])
 
         if self.peek_file: self.restore_view()
 
