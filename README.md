@@ -1,6 +1,6 @@
 #HiveOpener
 
-This is a Sublime Text 3 plugin to quickly open file/directory according to config file. Once you config your files/directories in the specified config file, you can then open your file in Sublime Text quickly, and open your directory in `Explorer(for windows)` or `Finder (for mac)` conveniently.
+This is a Sublime Text 2/3 plugin to quickly open file/directory according to config file. Once you config your files/directories in the specified config file, you can then open your file in Sublime Text quickly, and open your directory in `Explorer(for windows)` or `Finder (for mac)` conveniently.
 
 ##Feature & Usage
 

@@ -4,6 +4,7 @@ from os import path
 
 SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
 USER_PLATFORM = sublime.platform()
+gte_st3 = int(sublime.version()) >= 3000
 
 class HiveOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -12,7 +13,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
 
     def init(self):
         settings = sublime.load_settings(SETTINGS_BASE_NAME)
-        self.peek_file = settings.get('peek_file_on_highlight', False)
+        self.peek_file = gte_st3 and settings.get('peek_file_on_highlight', False)
         self.binfile_open_in_subl = settings.get('open_binary_file_in_sublime', False)
         self.init_item_data(settings)
 
@@ -43,7 +44,10 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         return ext[1:].upper() or 'FILE'
 
     def show_quick_panel(self):
-        self.window.show_quick_panel(self.view_items, self.on_done, on_highlight=self.on_highlight)
+        if gte_st3:
+            self.window.show_quick_panel(self.view_items, self.on_done, on_highlight=self.on_highlight)
+        else:
+            self.window.show_quick_panel(self.view_items, self.on_done)
 
     def on_done(self, index):
         if index == -1:
@@ -62,7 +66,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         if not self.peek_file: return
         item_name = self.get_name_by_index(index)
 
-        if self.peek_file and path.isfile(item_name):
+        if path.isfile(item_name):
             self.open_file(item_name, True)
         else:
             self.restore_view()
