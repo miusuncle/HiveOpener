@@ -14,16 +14,36 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         settings = sublime.load_settings(SETTINGS_BASE_NAME)
         self.peek_file = settings.get('peek_file_on_highlight', False)
         self.binfile_open_in_subl = settings.get('open_binary_file_in_sublime', False)
+        self.init_item_data(settings)
+
+        if self.peek_file: self.save_view()
+
+    def init_item_data(self, settings):
         self.items = []
+        self.view_items = []
 
         for key in ('dirs', 'files'):
             if not settings.has(key): continue
             self.items.extend(settings.get(key))
 
-        if self.peek_file: self.save_view()
+        # sort items alphabetically
+        self.items.sort(key=lambda x: x[1].lower())
+
+        for item in self.items:
+            pathname, desc = item
+            title = desc.ljust(80, ' ')
+            subtitle = ('%s ' % self.get_desc_type(pathname)) + pathname
+            self.view_items.append([title, subtitle])
+
+    def get_desc_type(self, pathname):
+        if path.isdir(pathname): return 'DIR'
+
+        basename = path.basename(pathname)
+        name, ext = path.splitext(basename)
+        return ext[1:].upper() or 'FILE'
 
     def show_quick_panel(self):
-        self.window.show_quick_panel(self.items, self.on_done, on_highlight=self.on_highlight)
+        self.window.show_quick_panel(self.view_items, self.on_done, on_highlight=self.on_highlight)
 
     def on_done(self, index):
         if index == -1:

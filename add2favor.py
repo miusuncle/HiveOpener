@@ -35,8 +35,16 @@ class HiveAddToFavorCommand(sublime_plugin.WindowCommand):
 
     def add_to_list(self, settings):
         file_list = settings.get('files', [])
+
         filename = self.get_file_name()
-        file_list.append([filename, path.basename(filename)])
+        basename = path.basename(filename)
+        name, ext = path.splitext(basename)
+
+        # check whether keep extention
+        desc = name if ext in ['.exe', '.lnk', '.app'] else basename
+
+        file_list.append([filename, desc])
+
         settings.set('files', file_list)
         sublime.save_settings(SETTINGS_BASE_NAME)
 
