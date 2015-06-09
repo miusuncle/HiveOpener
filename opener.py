@@ -1,7 +1,9 @@
 import sublime, sublime_plugin
+import subprocess
 from os import path
 
 SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
+USER_PLATFORM = sublime.platform()
 
 class HiveOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -11,6 +13,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
     def init(self):
         settings = sublime.load_settings(SETTINGS_BASE_NAME)
         self.peek_file = settings.get('peek_file_on_highlight', False)
+        self.binfile_open_in_subl = settings.get('open_binary_file_in_sublime', False)
         self.items = []
 
         for key in ('dirs', 'files'):
@@ -48,14 +51,30 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         if preview:
             self.window.open_file(filename, sublime.TRANSIENT)
         else:
-            self.window.open_file(filename)
+            if self.binfile_open_in_subl or not self.is_binary_file(filename):
+                self.window.open_file(filename)
+            else:
+                self.open_binary_file(filename)
 
     def open_dir(self, dirname):
-        if sublime.platform() == 'windows':
-            import subprocess
+        if USER_PLATFORM == 'windows':
             subprocess.Popen(['explorer', dirname])
-        elif sublime.platform() == 'osx':
+        elif USER_PLATFORM == 'osx':
             self.window.run_command('open_dir', { 'dir': dirname })
+
+    def open_binary_file(self, filename):
+        if USER_PLATFORM == 'windows':
+            subprocess.Popen(['explorer', filename])
+        elif USER_PLATFORM == 'osx':
+            # TODO: add `open_binary_file` support for osx
+            pass
+
+        if self.peek_file: self.restore_view()
+
+    def is_binary_file(self, filename):
+        textchars = bytearray([7, 8, 9, 10, 12, 13, 27]) + bytearray(range(0x20, 0x100))
+        leadbytes = open(filename, 'rb').read(1024)
+        return bool(leadbytes.translate(None, textchars))
 
     def get_name_by_index(self, index):
         return self.items[index][0]

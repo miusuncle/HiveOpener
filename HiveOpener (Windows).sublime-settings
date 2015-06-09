@@ -1,5 +1,6 @@
 {
     "peek_file_on_highlight": false,
+    "open_binary_file_in_sublime": false,
 
     "dirs": [
         ["C:\\Windows\\System32\\drivers\\etc", "windows_hosts_dir"]
