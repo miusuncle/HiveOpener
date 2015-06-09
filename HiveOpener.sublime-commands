@@ -1,0 +1,19 @@
+[
+    {
+        "caption": "HiveOpener Setting: Open Binary File in Sublime Text",
+        "command": "hive_open_switcher",
+        "args": { "open_binary_file_in_sublime": true }
+    },
+
+    {
+        "caption": "HiveOpener Setting: Open Binary File in External Program",
+        "command": "hive_open_switcher",
+        "args": { "open_binary_file_in_sublime": false }
+    },
+
+    {
+        "caption": "HiveOpener Setting: Toggle Peek File on Highlight",
+        "command": "hive_open_switcher",
+        "args": { "toggle_peek_file_on_highlight": true }
+    }
+]
