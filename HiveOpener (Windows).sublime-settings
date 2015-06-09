@@ -1,5 +1,5 @@
 {
-    "peek_file": false,
+    "peek_file_on_highlight": false,
 
     "dirs": [
         ["C:\\Windows\\System32\\drivers\\etc", "windows_hosts_dir"]

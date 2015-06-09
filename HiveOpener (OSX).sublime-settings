@@ -1,5 +1,5 @@
 {
-    "peek_file": false,
+    "peek_file_on_highlight": false,
 
     "dirs": [
         ["/etc", "osx_hosts_dir"]

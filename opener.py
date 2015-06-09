@@ -10,7 +10,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
 
     def init(self):
         settings = sublime.load_settings(SETTINGS_BASE_NAME)
-        self.peek_file = settings.get('peek_file', False)
+        self.peek_file = settings.get('peek_file_on_highlight', False)
         self.items = []
 
         for key in ('dirs', 'files'):
