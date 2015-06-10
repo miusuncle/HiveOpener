@@ -12,9 +12,10 @@ rex = re.compile(
     ''')
 
 SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
+gte_st3 = int(sublime.version()) >= 3000
 
-class AddContextUrlCommand(sublime_plugin.TextCommand):
-    def run(self, edit, event):
+class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
+    def run(self, edit, event=None):
         settings = sublime.load_settings(SETTINGS_BASE_NAME)
         url = self.find_url(event)
         index = self.index_in_list(url, settings)
@@ -24,10 +25,10 @@ class AddContextUrlCommand(sublime_plugin.TextCommand):
         else:
             self.remove_from_list(index, settings)
 
-    def is_visible(self, event):
+    def is_visible(self, event=None):
         return self.find_url(event) is not None
 
-    def description(self, event):
+    def description(self, event=None):
         url = self.find_url(event)
 
         if self.index_in_list(url) == -1:
@@ -54,12 +55,10 @@ class AddContextUrlCommand(sublime_plugin.TextCommand):
         settings.set('urls', url_list)
         sublime.save_settings(SETTINGS_BASE_NAME)
 
-    def find_url(self, event):
-        pt = self.view.window_to_text((event['x'], event['y']))
+    def find_url(self, pt):
         line = self.view.line(pt)
-
-        line.a = max(line.a, pt - 1024)
-        line.b = min(line.b, pt + 1024)
+        a, b = [max(line.a, pt - 1024), min(line.b, pt + 1024)]
+        line = sublime.Region(a, b)
 
         text = self.view.substr(line)
 
@@ -75,5 +74,19 @@ class AddContextUrlCommand(sublime_plugin.TextCommand):
 
         return None
 
-    def want_event(self):
-        return True
+if gte_st3:
+    class AddContextUrlCommand(AddContextUrlBaseCommand):
+        def find_url(self, event):
+            pt = self.view.window_to_text((event['x'], event['y']))
+            return super(AddContextUrlCommand, self).find_url(pt)
+
+        def want_event(self):
+            return True
+else:
+    class AddContextUrlCommand(AddContextUrlBaseCommand):
+        def find_url(self, event):
+            selection = self.view.sel()
+            if not len(selection): return None
+
+            pt = selection[-1].b
+            return super(AddContextUrlCommand, self).find_url(pt)

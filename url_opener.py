@@ -22,7 +22,7 @@ class HiveUrlOpenCommand(sublime_plugin.WindowCommand):
         for item in self.items:
             url, desc = item
             desc = desc or url
-            title = desc.ljust(80, ' ')
+            title = desc.ljust(100, ' ')
             subtitle = 'URL ' + url
             self.view_items.append([title, subtitle])
 
@@ -32,4 +32,6 @@ class HiveUrlOpenCommand(sublime_plugin.WindowCommand):
     def on_done(self, index):
         if index == -1: return
         url = self.items[index][0]
+        sublime.set_clipboard(url)
+        sublime.status_message('URL Copied: ' + url)
         webbrowser.open_new_tab(url)
