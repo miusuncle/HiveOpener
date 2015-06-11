@@ -11,7 +11,7 @@ else:
 
 class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
     def run(self, **args):
-        self.init()
+        self.init_vars()
 
         if 'cmd' in args:
             cmd = args.get('cmd')
@@ -27,12 +27,8 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
             self.list_actions()
 
     def run_cmd(self):
-        if self.hive_cmd.startswith('add_'):
-            self.run()
-        else:
-            self.run(cmd=self.hive_cmd)
-
-    def init(self): self.init_vars()
+        delay = 500 if self.hive_cmd.startswith('add_') else 100
+        sublime.set_timeout(lambda: self.run(cmd=self.hive_cmd), delay)
 
     def init_vars(self):
         self.cmd2idx = dict(
@@ -118,8 +114,8 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
     def on_select_action(self, index):
         if index == -1: return
         item = self.action_list[index]
-        getattr(self, item['onselect'])(item)
         self.hive_cmd = self.idx2cmd[index]
+        getattr(self, item['onselect'])(item)
 
     def show_item_list(self, item):
         self.conf = sublime.load_settings(CONFIG_BASE_NAME)
@@ -150,12 +146,14 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
         caption = '%s ( %s ):' % (item['name'], item['input_format'])
         init_text = item.get('init_text', '')
         checker, save_to = item['input_checker'], item['save_to']
+
         on_done = partial(self.on_input_info, checker, save_to)
+        on_cancel = self.run if self.hive_cmd.startswith('add_') else self.run_cmd
 
         if gte_st3:
-            self.window.show_input_panel(caption, init_text, on_done, None, on_cancel=self.run_cmd)
+            self.window.show_input_panel(caption, init_text, on_done, None, on_cancel=on_cancel)
         else:
-            self.window.show_input_panel(caption, init_text, on_done, None, self.run_cmd)
+            self.window.show_input_panel(caption, init_text, on_done, None, on_cancel)
 
     def on_input_info(self, checker, save_to, input_text):
         path, desc = self.split_by_pipe(input_text)
