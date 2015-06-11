@@ -1,7 +1,4 @@
 {
-    "peek_file_on_highlight": false,
-    "open_binary_file_in_sublime": false,
-
     "dirs": [
         ["/etc", "osx_hosts_dir"]
     ],

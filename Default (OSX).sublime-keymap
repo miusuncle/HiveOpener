@@ -5,6 +5,6 @@
     {
         "keys": ["alt+shift+i"],
         "command": "open_file",
-        "args": { "file": "${packages}/User/HiveOpener.sublime-settings" }
+        "args": { "file": "${packages}/User/HiveOpenerConfig.sublime-settings" }
     }
 ]

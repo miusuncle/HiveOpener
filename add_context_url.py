@@ -11,19 +11,23 @@ rex = re.compile(
     [a-zA-Z0-9\-_~:/#@$*+=]                                                 # allowed end chars
     ''')
 
-SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
 gte_st3 = int(sublime.version()) >= 3000
+
+if gte_st3:
+    from .config import *
+else:
+    from config import *
 
 class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
     def run(self, edit, event=None):
-        settings = sublime.load_settings(SETTINGS_BASE_NAME)
+        conf = sublime.load_settings(CONFIG_BASE_NAME)
         url = self.find_url(event)
-        index = self.index_in_list(url, settings)
+        index = self.index_in_list(url, conf)
 
         if index == -1:
-            self.add_to_list(url, settings)
+            self.add_to_list(url, conf)
         else:
-            self.remove_from_list(index, settings)
+            self.remove_from_list(index, conf)
 
     def is_visible(self, event=None):
         return self.find_url(event) is not None
@@ -36,24 +40,24 @@ class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
         else:
             return 'Remove URL from Open List'
 
-    def index_in_list(self, url, settings=None):
-        if settings == None:
-            settings = sublime.load_settings(SETTINGS_BASE_NAME)
+    def index_in_list(self, url, conf=None):
+        if conf == None:
+            conf = sublime.load_settings(CONFIG_BASE_NAME)
 
-        url_list = [item[0] for item in settings.get('urls', [])]
+        url_list = [item[0] for item in conf.get('urls', [])]
         return url_list.index(url) if url in url_list else -1
 
-    def add_to_list(self, url, settings):
-        url_list = settings.get('urls', [])
+    def add_to_list(self, url, conf):
+        url_list = conf.get('urls', [])
         url_list.append([url, ''])
-        settings.set('urls', url_list)
-        sublime.save_settings(SETTINGS_BASE_NAME)
+        conf.set('urls', url_list)
+        sublime.save_settings(CONFIG_BASE_NAME)
 
-    def remove_from_list(self, index, settings):
-        url_list = settings.get('urls', [])
+    def remove_from_list(self, index, conf):
+        url_list = conf.get('urls', [])
         url_list.pop(index)
-        settings.set('urls', url_list)
-        sublime.save_settings(SETTINGS_BASE_NAME)
+        conf.set('urls', url_list)
+        sublime.save_settings(CONFIG_BASE_NAME)
 
     def find_url(self, pt):
         line = self.view.line(pt)
@@ -75,6 +79,7 @@ class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
         return None
 
 if gte_st3:
+
     class AddContextUrlCommand(AddContextUrlBaseCommand):
         def find_url(self, event):
             pt = self.view.window_to_text((event['x'], event['y']))
@@ -83,6 +88,7 @@ if gte_st3:
         def want_event(self):
             return True
 else:
+
     class AddContextUrlCommand(AddContextUrlBaseCommand):
         def find_url(self, event):
             selection = self.view.sel()

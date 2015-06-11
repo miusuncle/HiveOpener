@@ -1,18 +1,23 @@
 import sublime, sublime_plugin
 from os import path
 
-SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
+gte_st3 = int(sublime.version()) >= 3000
+
+if gte_st3:
+    from .config import *
+else:
+    from config import *
 
 class HiveAddToFavorCommand(sublime_plugin.WindowCommand):
     def run(self):
-        settings = sublime.load_settings(SETTINGS_BASE_NAME)
         filename = self.get_file_name()
-        index = self.index_in_list(filename, settings)
+        conf = sublime.load_settings(CONFIG_BASE_NAME)
+        index = self.index_in_list(filename, conf)
 
         if index == -1:
-            self.add_to_list(settings)
+            self.add_to_list(conf)
         else:
-            self.remove_from_list(index, settings)
+            self.remove_from_list(index, conf)
 
     def is_visible(self):
         return bool(self.get_file_name())
@@ -22,19 +27,19 @@ class HiveAddToFavorCommand(sublime_plugin.WindowCommand):
         if not filename: return ''
 
         if self.index_in_list(filename) == -1:
-            return 'Add to Open List'
+            return 'Add File to Open List'
         else:
-            return 'Remove from Open List'
+            return 'Remove File from Open List'
 
-    def index_in_list(self, filename, settings=None):
-        if settings == None:
-            settings = sublime.load_settings(SETTINGS_BASE_NAME)
+    def index_in_list(self, filename, conf=None):
+        if conf == None:
+            conf = sublime.load_settings(CONFIG_BASE_NAME)
 
-        file_list = [item[0] for item in settings.get('files', [])]
+        file_list = [item[0] for item in conf.get('files', [])]
         return file_list.index(filename) if filename in file_list else -1
 
-    def add_to_list(self, settings):
-        file_list = settings.get('files', [])
+    def add_to_list(self, conf):
+        file_list = conf.get('files', [])
 
         filename = self.get_file_name()
         basename = path.basename(filename)
@@ -45,14 +50,14 @@ class HiveAddToFavorCommand(sublime_plugin.WindowCommand):
 
         file_list.append([filename, desc])
 
-        settings.set('files', file_list)
-        sublime.save_settings(SETTINGS_BASE_NAME)
+        conf.set('files', file_list)
+        sublime.save_settings(CONFIG_BASE_NAME)
 
-    def remove_from_list(self, index, settings):
-        file_list = settings.get('files', [])
+    def remove_from_list(self, index, conf):
+        file_list = conf.get('files', [])
         file_list.pop(index)
-        settings.set('files', file_list)
-        sublime.save_settings(SETTINGS_BASE_NAME)
+        conf.set('files', file_list)
+        sublime.save_settings(CONFIG_BASE_NAME)
 
     def get_file_name(self):
         view = self.window.active_view()

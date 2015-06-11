@@ -2,9 +2,12 @@ import sublime, sublime_plugin
 import subprocess
 from os import path
 
-SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
-USER_PLATFORM = sublime.platform()
 gte_st3 = int(sublime.version()) >= 3000
+
+if gte_st3:
+    from .config import *
+else:
+    from config import *
 
 class HiveOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
@@ -12,20 +15,21 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         self.show_quick_panel()
 
     def init(self):
-        settings = sublime.load_settings(SETTINGS_BASE_NAME)
-        self.peek_file = gte_st3 and settings.get('peek_file_on_highlight', False)
-        self.binfile_open_in_subl = settings.get('open_binary_file_in_sublime', False)
-        self.init_item_data(settings)
+        options = sublime.load_settings(OPTIONS_BASE_NAME)
+        self.peek_file = gte_st3 and options.get('peek_file_on_highlight', False)
+        self.binfile_open_in_subl = options.get('open_binary_file_in_sublime', False)
 
+        self.init_item_data()
         if self.peek_file: self.save_view()
 
-    def init_item_data(self, settings):
+    def init_item_data(self):
+        conf = sublime.load_settings(CONFIG_BASE_NAME)
         self.items = []
         self.view_items = []
 
         for key in ('dirs', 'files'):
-            if not settings.has(key): continue
-            self.items.extend(settings.get(key))
+            if not conf.has(key): continue
+            self.items.extend(conf.get(key))
 
         # sort items alphabetically
         self.items.sort(key=lambda x: x[1].lower())
@@ -40,7 +44,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         basename = path.basename(pathname)
         name, ext = path.splitext(basename)
 
-        if USER_PLATFORM == 'osx' and ext == '.app':
+        if SUBLIME_PLATFORM == 'osx' and ext == '.app':
             return 'APP'
 
         if path.isdir(pathname): return 'DIR'
@@ -59,7 +63,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         item_name = self.get_name_by_index(index)
         name, ext = path.splitext(item_name)
 
-        if USER_PLATFORM == 'osx' and ext == '.app':
+        if SUBLIME_PLATFORM == 'osx' and ext == '.app':
             self.open_binary_file(item_name)
             return
 
@@ -89,15 +93,15 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
                 self.open_binary_file(filename)
 
     def open_dir(self, dirname):
-        if USER_PLATFORM == 'windows':
+        if SUBLIME_PLATFORM == 'windows':
             subprocess.Popen(['explorer', dirname])
-        elif USER_PLATFORM == 'osx':
+        elif SUBLIME_PLATFORM == 'osx':
             self.window.run_command('open_dir', { 'dir': dirname })
 
     def open_binary_file(self, filename):
-        if USER_PLATFORM == 'windows':
+        if SUBLIME_PLATFORM == 'windows':
             subprocess.Popen(['explorer', filename])
-        elif USER_PLATFORM == 'osx':
+        elif SUBLIME_PLATFORM == 'osx':
             subprocess.Popen(['open', filename])
 
         if self.peek_file: self.restore_view()

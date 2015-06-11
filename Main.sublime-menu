@@ -5,32 +5,48 @@
             "caption": "Hive Opener",
             "children": [
                 {
-                    "caption": "Show Open List",
+                    "caption": "Show File/Dir Open List",
                     "command": "hive_open"
+                },
+
+                {
+                    "caption": "Show URL Open List",
+                    "command": "hive_url_open"
                 },
 
                 { "caption": "-" },
                 {
-                    "caption": "Hive Opener Default Settings",
+                    "caption": "Open Default Options Settings",
                     "command": "open_file",
                     "args": {
-                        "file": "${packages}/HiveOpener/HiveOpener (Windows).sublime-settings",
+                        "file": "${packages}/HiveOpener/HiveOpenerOptions.sublime-settings",
+                        "platform": "Windows"
+                    }
+                },
+
+                {
+                    "caption": "Open Default Config Settings",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/HiveOpener/HiveOpenerConfig (Windows).sublime-settings",
                         "platform": "Windows"
                     }
                 },
                 {
-                    "caption": "Hive Opener Default Settings",
+                    "caption": "Open Default Config Settings",
                     "command": "open_file",
                     "args": {
-                        "file": "${packages}/HiveOpener/HiveOpener (OSX).sublime-settings",
+                        "file": "${packages}/HiveOpener/HiveOpenerConfig (OSX).sublime-settings",
                         "platform": "OSX"
                     }
                 },
+
+                { "caption": "-" },
                 {
-                    "caption": "Hive Opener User Settings",
+                    "caption": "Open User Config Settings",
                     "command": "open_file",
                     "args": {
-                        "file": "${packages}/User/HiveOpener.sublime-settings"
+                        "file": "${packages}/User/HiveOpenerConfig.sublime-settings"
                     }
                 }
             ]

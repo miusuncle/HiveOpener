@@ -1,19 +1,21 @@
 import sublime, sublime_plugin
 import webbrowser
 
-SETTINGS_BASE_NAME = 'HiveOpener.sublime-settings'
+gte_st3 = int(sublime.version()) >= 3000
+
+if gte_st3:
+    from .config import *
+else:
+    from config import *
 
 class HiveUrlOpenCommand(sublime_plugin.WindowCommand):
     def run(self):
-        self.init()
+        self.init_item_data()
         self.show_quick_panel()
 
-    def init(self):
-        settings = sublime.load_settings(SETTINGS_BASE_NAME)
-        self.init_item_data(settings)
-
-    def init_item_data(self, settings):
-        self.items = settings.get('urls', [])
+    def init_item_data(self):
+        conf = sublime.load_settings(CONFIG_BASE_NAME)
+        self.items = conf.get('urls', [])
         self.view_items = []
 
         # sort items alphabetically

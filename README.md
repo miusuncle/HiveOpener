@@ -6,7 +6,7 @@ This is a Sublime Text 2/3 plugin to quickly open file/directory according to co
 
 ### Add/remove file to/from open list
 
-Right click the tab of the current opened file, then select `Add to Open List` or `Remove from Open List` command, your file will be registerred/unregisterred from the config file.
+Right click the tab of the current opened file, then select `Add File to Open List` or `Remove File from Open List` command, your file will be registerred/unregisterred from the config file.
 
 ### Add/remove directory to/from open list
 
