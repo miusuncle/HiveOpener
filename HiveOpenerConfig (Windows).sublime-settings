@@ -4,6 +4,45 @@
     ],
 
     "files": [
+        ["C:\\Windows\\System32\\calc.exe", ">_ calc"],
+        ["C:\\Windows\\System32\\cmd.exe", ">_ cmd"],
+        ["C:\\Windows\\System32\\mspaint.exe", ">_ mspaint"],
+        ["C:\\Windows\\System32\\notepad.exe", ">_ notepad"],
         ["C:\\Windows\\System32\\drivers\\etc\\hosts", "windows_hosts_file"]
+    ],
+
+    "urls": [
+        [
+            "http://tapd.oa.com/webdev/markdown_wikis/#1010097701004950949",
+            "qcloud_console <dev-guide>"
+        ],
+        [
+            "http://tapd.oa.com/webdev/markdown_wikis/#1010097701004937727",
+            "panshi <dev-guide>"
+        ],
+        [
+            "http://panshi.isd.com/",
+            "panshi <正式环境>"
+        ],
+        [
+            "http://dev.tcos.qcloudoa.com/",
+            "panshi <联调环境>"
+        ],
+        [
+            "http://test.panshi.com/",
+            "panshi <测试环境>"
+        ],
+        [
+            "http://dev.fengyun.isd.com/AppFengyun/index.php",
+            "fengyun <联调环境>"
+        ],
+        [
+            "http://fengyun.isd.com/AppFengyun/index.php",
+            "fengyun <正式环境>"
+        ],
+        [
+            "https://www.google.com",
+            "google"
+        ]
     ]
 }
