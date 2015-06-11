@@ -1,5 +1,5 @@
 [
     { "caption": "-" },
-    { "command": "add_context_url" },
+    { "command": "hive_add_context_url" },
     { "caption": "-" }
 ]

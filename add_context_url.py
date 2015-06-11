@@ -7,7 +7,7 @@ if gte_st3:
 else:
     from config import *
 
-class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
+class HiveAddContextUrlBaseCommand(sublime_plugin.TextCommand):
     def run(self, edit, event=None):
         conf = sublime.load_settings(CONFIG_BASE_NAME)
         url = self.find_url(event)
@@ -66,19 +66,19 @@ class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
 
 if gte_st3:
 
-    class AddContextUrlCommand(AddContextUrlBaseCommand):
+    class HiveAddContextUrlCommand(HiveAddContextUrlBaseCommand):
         def find_url(self, event):
             pt = self.view.window_to_text((event['x'], event['y']))
-            return super(AddContextUrlCommand, self).find_url(pt)
+            return super(HiveAddContextUrlCommand, self).find_url(pt)
 
         def want_event(self):
             return True
 else:
 
-    class AddContextUrlCommand(AddContextUrlBaseCommand):
+    class HiveAddContextUrlCommand(HiveAddContextUrlBaseCommand):
         def find_url(self, event):
             selection = self.view.sel()
             if not len(selection): return None
 
             pt = selection[-1].b
-            return super(AddContextUrlCommand, self).find_url(pt)
+            return super(HiveAddContextUrlCommand, self).find_url(pt)
