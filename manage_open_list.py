@@ -51,7 +51,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
                 'name': 'Add `FILE` to Open List',
                 'onselect': 'show_input_panel',
                 'input_format': 'filepath | description',
-                'input_checker': path.isfile,
+                'input_checker': self.isfile,
                 'save_to': 'files'
             },
             {
@@ -74,7 +74,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
                 'name': 'Edit `FILE` from Open List',
                 'onselect': 'show_item_list',
                 'input_format': 'filepath | description',
-                'input_checker': path.isfile,
+                'input_checker': self.isfile,
                 'save_to': 'files',
                 'command': 'edit'
             },
@@ -122,8 +122,29 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
         self.itemoption = item
         self.itemlist = self.conf.get(item['save_to'], [])
 
-        showlist = [['Go Back', '>_ SHOW MAIN MENU']] + self.itemlist
-        self.window.show_quick_panel(showlist, self.on_select_item)
+        listtype = item['save_to'][:-1].upper()
+        viewlist = self.build_view_list(self.itemlist, listtype)
+        viewlist = [['Go Back', '>_ SHOW MAIN MENU']] + viewlist
+        self.window.show_quick_panel(viewlist, self.on_select_item)
+
+    def build_view_list(self, rawlist, type):
+        result = []
+
+        for (pathname, desc) in rawlist:
+            if not desc:
+                basename = path.basename(pathname)
+                desc = pathname if type == 'URL' else basename or pathname
+
+            label = self.guess_file_type(pathname) if type == 'FILE' else type
+            pathname = '%s %s' % (label, pathname)
+            result.append([desc, pathname])
+
+        return result
+
+    def guess_file_type(self, pathname):
+        basename = path.basename(pathname)
+        name, ext = path.splitext(basename)
+        return ext[1:].upper() or 'FILE'
 
     def on_select_item(self, index):
         if index in [-1, 0]: return self.run()
@@ -188,6 +209,13 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
         first, rest = text.strip().split('|', 1)
         return [first.strip(), rest.strip()]
 
-    def isurl(self, url):
-        return bool(REX_URL.match(url))
+    def isfile(self, target):
+        name, ext = path.splitext(target)
+        if SUBLIME_PLATFORM == 'osx' and ext == '.app':
+            return True
+
+        return path.isfile(target)
+
+    def isurl(self, target):
+        return bool(REX_URL.match(target))
 
