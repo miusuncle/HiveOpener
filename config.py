@@ -14,3 +14,5 @@ REX_URL = re.compile(
     /?[a-zA-Z0-9\-._?,!'(){}\[\]/+&@%$#=:"|~;]*                             # url path and query string
     [a-zA-Z0-9\-_~:/#@$*+=]                                                 # allowed end chars
     ''')
+
+REX_QUOTES = re.compile(r'"(.+)"')

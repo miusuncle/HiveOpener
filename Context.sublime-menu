@@ -1,5 +1,6 @@
 [
     { "caption": "-" },
     { "command": "hive_add_context_url" },
+    { "command": "hive_inline_path_removal" },
     { "caption": "-" }
 ]
