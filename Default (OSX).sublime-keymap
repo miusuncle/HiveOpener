@@ -1,4 +1,5 @@
 [
+    { "keys": ["super+ctrl+i"], "command": "hive_manage_open_list" },
     { "keys": ["alt+shift+o"], "command": "hive_open" },
     { "keys": ["super+ctrl+o"], "command": "hive_url_open" },
 

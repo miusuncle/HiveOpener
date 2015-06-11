@@ -1,6 +1,7 @@
 [
+    { "keys": ["ctrl+alt+i"], "command": "hive_manage_open_list" },
     { "keys": ["alt+shift+o"], "command": "hive_open" },
-    { "keys": ["f12"], "command": "hive_url_open" },
+    { "keys": ["ctrl+alt+o"], "command": "hive_url_open" },
 
     {
         "keys": ["alt+shift+i"],
