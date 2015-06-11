@@ -34,8 +34,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         # sort items alphabetically
         self.items.sort(key=lambda x: x[1].lower())
 
-        for item in self.items:
-            pathname, desc = item
+        for (pathname, desc) in self.items:
             basename = path.basename(pathname)
 
             title = (desc or basename or pathname).ljust(80, ' ')
@@ -43,8 +42,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             self.view_items.append([title, subtitle])
 
     def get_desc_type(self, pathname):
-        basename = path.basename(pathname)
-        name, ext = path.splitext(basename)
+        name, ext = path.splitext(pathname)
 
         if SUBLIME_PLATFORM == 'osx' and ext == '.app':
             return 'APP'

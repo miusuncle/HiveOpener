@@ -21,8 +21,7 @@ class HiveUrlOpenCommand(sublime_plugin.WindowCommand):
         # sort items alphabetically
         self.items.sort(key=lambda x: x[1].lower())
 
-        for item in self.items:
-            url, desc = item
+        for (url, desc) in self.items:
             desc = desc or url
             title = desc.ljust(100, ' ')
             subtitle = 'URL ' + url
