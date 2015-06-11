@@ -15,6 +15,24 @@
     },
 
     {
+        "caption": "HiveOpener Command: Add `DIR` to Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "add_dir" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Add `FILE` to Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "add_file" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Add `URL` to Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "add_url" }
+    },
+
+    {
         "caption": "HiveOpener Setting: Open Binary File in Sublime Text",
         "command": "hive_open_switcher",
         "args": { "open_binary_file_in_sublime": true }

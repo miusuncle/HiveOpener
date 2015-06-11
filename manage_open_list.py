@@ -10,11 +10,22 @@ else:
     from config import *
 
 class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, **args):
+        self.init()
+
+        if 'cmd' in args:
+            cmd = args.get('cmd')
+            action = self.action_list[self.cmds[cmd]]
+            self.show_input_panel(action)
+        else:
+            self.list_actions()
+
+    def init(self):
         self.init_vars()
-        self.list_actions()
 
     def init_vars(self):
+        self.cmds = dict(add_dir=0, add_file=1, add_url=2)
+
         self.action_list = [
             {
                 'name': 'Add `DIR` to Open List',
@@ -49,7 +60,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
         getattr(self, item['onselect'])(item)
 
     def show_input_panel(self, item):
-        caption = '%s ( %s ): ' % (item['name'], item['input_format'])
+        caption = '%s ( %s ):' % (item['name'], item['input_format'])
 
         checker, save_to = item['input_checker'], item['save_to']
         on_done = partial(self.on_input_info, checker, save_to)
@@ -78,8 +89,6 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
         else:
             sublime.status_message('Invalid input, action abort.')
-
-        self.list_actions()
 
     def index_in_list(self, needle, haystack):
         haystack = [item[0] for item in haystack]
