@@ -33,6 +33,42 @@
     },
 
     {
+        "caption": "HiveOpener Command: Edit `DIR` from Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "edit_dir" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Edit `FILE` from Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "edit_file" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Edit `URL` from Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "edit_url" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Delete `DIR` from Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "del_dir" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Delete `FILE` from Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "del_file" }
+    },
+
+    {
+        "caption": "HiveOpener Command: Delete `URL` from Open List",
+        "command": "hive_manage_open_list",
+        "args": { "cmd": "del_url" }
+    },
+
+    {
         "caption": "HiveOpener Setting: Open Binary File in Sublime Text",
         "command": "hive_open_switcher",
         "args": { "open_binary_file_in_sublime": true }

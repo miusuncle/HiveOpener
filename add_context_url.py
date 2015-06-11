@@ -1,15 +1,4 @@
 import sublime, sublime_plugin
-import re
-
-rex = re.compile(
-    r'''(?x)
-    \b(?:
-        https?://(?:(?:[a-zA-Z0-9\-_]+(?:\.[a-zA-Z0-9\-._]+)+)|localhost)|  # http://
-        www\.[a-zA-Z0-9\-_]+(?:\.[a-zA-Z0-9\-._]+)+                         # www.
-    )
-    /?[a-zA-Z0-9\-._?,!'(){}\[\]/+&@%$#=:"|~;]*                             # url path and query string
-    [a-zA-Z0-9\-_~:/#@$*+=]                                                 # allowed end chars
-    ''')
 
 gte_st3 = int(sublime.version()) >= 3000
 
@@ -66,7 +55,7 @@ class AddContextUrlBaseCommand(sublime_plugin.TextCommand):
 
         text = self.view.substr(line)
 
-        it = rex.finditer(text)
+        it = REX_URL.finditer(text)
 
         for match in it:
             if match.start() <= (pt - line.a) and match.end() >= (pt - line.a):
