@@ -27,7 +27,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
             self.list_actions()
 
     def run_cmd(self):
-        delay = 500 if self.hive_cmd.startswith('add_') else 100
+        delay = 400 if self.hive_cmd.startswith('add_') else 10
         sublime.set_timeout(lambda: self.run(cmd=self.hive_cmd), delay)
 
     def init_vars(self):
@@ -124,7 +124,8 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
         listtype = item['save_to'][:-1].upper()
         viewlist = self.build_view_list(self.itemlist, listtype)
-        viewlist = [['\u2190 Back', '>_ SHOW MAIN MENU']] + viewlist
+
+        viewlist = [[u'\u2190 Back', '>_ SHOW MAIN MENU']] + viewlist
         self.window.show_quick_panel(viewlist, self.on_select_item)
 
     def build_view_list(self, rawlist, type):
