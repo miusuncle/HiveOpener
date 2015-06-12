@@ -124,7 +124,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
         listtype = item['save_to'][:-1].upper()
         viewlist = self.build_view_list(self.itemlist, listtype)
-        viewlist = [['Go Back', '>_ SHOW MAIN MENU']] + viewlist
+        viewlist = [['\u2190 Back', '>_ SHOW MAIN MENU']] + viewlist
         self.window.show_quick_panel(viewlist, self.on_select_item)
 
     def build_view_list(self, rawlist, type):
