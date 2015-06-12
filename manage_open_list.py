@@ -15,14 +15,9 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
         if 'cmd' in args:
             cmd = args.get('cmd')
-            index = self.cmd2idx.get(cmd, -1)
-            if index == -1: return
-            action = self.action_list[index]
-
-            if index < 3:
-                self.show_input_panel(action)
-            else:
-                self.show_item_list(action)
+            index = self.cmd2idx.get(cmd)
+            if index is not None:
+                self.on_select_action(index)
         else:
             self.list_actions()
 
