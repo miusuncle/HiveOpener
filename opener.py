@@ -36,8 +36,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
 
         for (pathname, desc) in self.items:
             basename = path.basename(pathname)
-
-            title = (desc or basename or pathname).ljust(80, ' ')
+            title = desc or basename or pathname
             subtitle = ('%s ' % self.get_desc_type(pathname)) + pathname
             self.view_items.append([title, subtitle])
 
