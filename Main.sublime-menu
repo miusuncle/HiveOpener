@@ -100,6 +100,40 @@
 
                 { "caption": "-" },
                 {
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/HiveOpener/Default (Windows).sublime-keymap",
+                        "platform": "Windows"
+                    },
+                    "caption": "Key Bindings – Default"
+                },
+                {
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/HiveOpener/Default (OSX).sublime-keymap",
+                        "platform": "OSX"
+                    },
+                    "caption": "Key Bindings – Default"
+                },
+                {
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/User/Default (Windows).sublime-keymap",
+                        "platform": "Windows"
+                    },
+                    "caption": "Key Bindings – User"
+                },
+                {
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/User/Default (OSX).sublime-keymap",
+                        "platform": "OSX"
+                    },
+                    "caption": "Key Bindings – User"
+                },
+
+                { "caption": "-" },
+                {
                     "caption": "Open User Config Settings",
                     "command": "open_file",
                     "args": {
