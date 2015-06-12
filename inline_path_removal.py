@@ -40,6 +40,7 @@ class HiveInlinePathRemovalBaseCommand(sublime_plugin.TextCommand):
         if conf == None:
             conf = sublime.load_settings(CONFIG_BASE_NAME)
 
+        quoted_str = quoted_str.replace(r'\\', '\\')
         self.key = 'files' if isfile(quoted_str) else 'dirs'
         items = [item[0] for item in conf.get(self.key, [])]
 
