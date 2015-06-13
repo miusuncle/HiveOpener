@@ -203,7 +203,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
     def split_by_pipe(self, text):
         if '|' not in text: text += '|'
         first, rest = text.strip().split('|', 1)
-        return [first.strip(), rest.strip()]
+        return [first.strip('"\' '), rest.strip('"\' ')]
 
     def isfile(self, target):
         name, ext = path.splitext(target)
