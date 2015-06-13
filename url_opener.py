@@ -32,9 +32,14 @@ class HiveUrlOpenCommand(sublime_plugin.WindowCommand):
     def on_done(self, index):
         if index == -1: return
 
+        options = sublime.load_settings(OPTIONS_BASE_NAME)
+        copy_url_on_open = options.get('copy_url_on_open', False)
+
         url = self.items[index][0]
-        sublime.set_clipboard(url)
-        sublime.status_message('URL Copied: ' + url)
+
+        if copy_url_on_open:
+            sublime.set_clipboard(url)
+            sublime.status_message('URL Copied: ' + url)
 
         if url[0:3] == 'www': url = 'http://' + url
         webbrowser.open_new_tab(url)
