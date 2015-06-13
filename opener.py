@@ -1,5 +1,6 @@
 import sublime, sublime_plugin
 import subprocess
+import webbrowser
 from os import path
 
 gte_st3 = int(sublime.version()) >= 3000
@@ -27,7 +28,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         self.items = []
         self.view_items = []
 
-        for key in ('dirs', 'files'):
+        for key in ('dirs', 'files', 'urls'):
             if not conf.has(key): continue
             self.items.extend(conf.get(key))
 
@@ -41,13 +42,15 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             self.view_items.append([title, subtitle])
 
     def get_desc_type(self, pathname):
-        name, ext = path.splitext(pathname)
+        if self.isurl(pathname): return 'URL'
+        if self.isapp(pathname): return 'APP'
 
-        if SUBLIME_PLATFORM == 'osx' and ext == '.app':
-            return 'APP'
+        if path.isfile(pathname):
+            name, ext = path.splitext(pathname)
+            return ext[1:].upper() or 'FILE'
 
         if path.isdir(pathname): return 'DIR'
-        return ext[1:].upper() or 'FILE'
+        return 'UNKNOWN'
 
     def show_quick_panel(self):
         if gte_st3:
@@ -56,22 +59,17 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             self.window.show_quick_panel(self.view_items, self.on_done)
 
     def on_done(self, index):
-        if index == -1:
-            return self.restore_view() if self.peek_file else self.noop()
+        if self.peek_file: self.restore_view()
 
+        if index == -1: return
         item_name = self.get_name_by_index(index)
-        name, ext = path.splitext(item_name)
 
-        if SUBLIME_PLATFORM == 'osx' and ext == '.app':
-            self.open_binary_file(item_name)
-            return
+        if self.isurl(item_name): return self.open_url(item_name)
+        if self.isapp(item_name): return self.open_app(item_name)
+        if path.isfile(item_name): return self.open_file(item_name)
+        if path.isdir(item_name): return self.open_dir(item_name)
 
-        if path.isfile(item_name):
-            self.open_file(item_name)
-        elif path.isdir(item_name):
-            self.open_dir(item_name)
-        else:
-            sublime.status_message('Invalid file/directory name: %s.' % item_name)
+        sublime.status_message('Invalid file/directory name: `%s`.' % item_name)
 
     def on_highlight(self, index):
         if not self.peek_file: return
@@ -82,39 +80,55 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         else:
             self.restore_view()
 
+    def open_url(self, url):
+        sublime.set_clipboard(url)
+        sublime.status_message('URL Copied: ' + url)
+
+        if url[0:3] == 'www': url = 'http://' + url
+        webbrowser.open_new_tab(url)
+
+    def open_app(self, appname):
+        return subprocess.Popen(['open', appname])
+
     def open_file(self, filename, preview=False):
-        if preview:
-            self.window.open_file(filename, sublime.TRANSIENT)
+        if preview: return self.window.open_file(filename, sublime.TRANSIENT)
+        name, ext = path.splitext(filename)
+
+        if self.binfile_open_in_subl or not self.is_binary_file(filename):
+            self.open_file_inside_subl(filename)
         else:
-            if self.binfile_open_in_subl or not self.is_binary_file(filename):
-                self.window.open_file(filename)
-            else:
-                self.open_binary_file(filename)
+            self.open_file_outside_subl(filename)
+
+    def open_file_inside_subl(self, filename):
+        self.window.open_file(filename)
+
+    def open_file_outside_subl(self, filename):
+        if SUBLIME_PLATFORM == 'windows':
+            subprocess.Popen(['explorer', filename])
+
+        if SUBLIME_PLATFORM == 'osx':
+            subprocess.Popen(['open', filename])
 
     def open_dir(self, dirname):
         if SUBLIME_PLATFORM == 'windows':
             subprocess.Popen(['explorer', dirname])
-        elif SUBLIME_PLATFORM == 'osx':
+
+        if SUBLIME_PLATFORM == 'osx':
             self.window.run_command('open_dir', { 'dir': dirname })
-
-    def open_binary_file(self, filename):
-        if SUBLIME_PLATFORM == 'windows':
-            subprocess.Popen(['explorer', filename])
-        elif SUBLIME_PLATFORM == 'osx':
-            subprocess.Popen(['open', filename])
-
-        if self.peek_file: self.restore_view()
 
     def is_binary_file(self, filename):
         textchars = bytearray([7, 8, 9, 10, 12, 13, 27]) + bytearray(range(0x20, 0x100))
         leadbytes = open(filename, 'rb').read(1024)
         return bool(leadbytes.translate(None, textchars))
 
+    def isurl(self, target): return bool(REX_URL.match(target))
+
+    def isapp(self, target):
+        name, ext = path.splitext(target)
+        return SUBLIME_PLATFORM == 'osx' and ext == '.app'
+
     def get_name_by_index(self, index):
         return self.items[index][0]
-
-    # do nothing
-    def noop(self): pass
 
     def save_view(self):
         self.saved_view = self.window.active_view()
