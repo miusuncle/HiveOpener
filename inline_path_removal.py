@@ -15,6 +15,11 @@ class HiveInlinePathRemovalBaseCommand(sublime_plugin.TextCommand):
         index = self.index_in_list(quoted_str, conf)
         self.remove_from_list(index, conf)
 
+        if isfile(quoted_str):
+            sublime.status_message('File `%s` has been removed from open list.' % quoted_str)
+        else:
+            sublime.status_message('Dir `%s` has been removed from open list.' % quoted_str)
+
     def is_visible(self, event=None):
         filename = self.view.file_name() or ''
         basename = path.basename(filename)

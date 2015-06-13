@@ -177,7 +177,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
             self.conf.set(save_to, dest)
             sublime.save_settings(CONFIG_BASE_NAME)
-            sublime.status_message('Item `%s` has been add to open list.' % path)
+            sublime.status_message('Item `%s` has been added to open list.' % path)
 
             self.run_cmd() if self.hive_cmd == 'edit_item' else self.run()
 

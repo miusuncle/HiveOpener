@@ -15,8 +15,10 @@ class HiveAddContextUrlBaseCommand(sublime_plugin.TextCommand):
 
         if index == -1:
             self.add_to_list(url, conf)
+            sublime.status_message('URL `%s` has been added to open list.' % url)
         else:
             self.remove_from_list(index, conf)
+            sublime.status_message('URL `%s` has been removed from open list.' % url)
 
     def is_visible(self, event=None):
         return self.find_url(event) is not None

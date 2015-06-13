@@ -15,9 +15,11 @@ class HiveAddToFavorCommand(sublime_plugin.WindowCommand):
         index = self.index_in_list(filename, conf)
 
         if index == -1:
-            self.add_to_list(conf)
+            self.add_to_list(filename, conf)
+            sublime.status_message('File `%s` has been added to open list.' % filename)
         else:
             self.remove_from_list(index, conf)
+            sublime.status_message('File `%s` has been removed from open list.' % filename)
 
     def is_visible(self):
         return bool(self.get_file_name())
@@ -38,10 +40,9 @@ class HiveAddToFavorCommand(sublime_plugin.WindowCommand):
         file_list = [item[0] for item in conf.get('files', [])]
         return file_list.index(filename) if filename in file_list else -1
 
-    def add_to_list(self, conf):
+    def add_to_list(self, filename, conf):
         file_list = conf.get('files', [])
 
-        filename = self.get_file_name()
         basename = path.basename(filename)
         name, ext = path.splitext(basename)
 
