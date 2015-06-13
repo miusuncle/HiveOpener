@@ -37,12 +37,18 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
         self.items.sort(key=lambda x: x[1].lower())
 
         for (pathname, desc) in self.items:
-            basename = path.basename(pathname)
-            title = desc or basename or pathname
-            subtitle = ('%s ' % self.get_desc_type(pathname)) + pathname
+            title = desc
+
+            if not title:
+                if self.isapp(pathname) or path.isfile(pathname):
+                    title = path.basename(pathname) or pathname
+                else:
+                    title = pathname
+
+            subtitle = '%s %s' % (self.get_item_type(pathname), pathname)
             self.view_items.append([title, subtitle])
 
-    def get_desc_type(self, pathname):
+    def get_item_type(self, pathname):
         if self.isurl(pathname): return 'URL'
         if self.isapp(pathname): return 'APP'
 
@@ -126,8 +132,8 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
     def isurl(self, target): return bool(REX_URL.match(target))
 
     def isapp(self, target):
-        name, ext = path.splitext(target)
-        return SUBLIME_PLATFORM == 'osx' and ext == '.app'
+        if SUBLIME_PLATFORM != 'osx': return False
+        return path.splitext(target)[1] == '.app'
 
     def get_name_by_index(self, index):
         return self.items[index][0]
