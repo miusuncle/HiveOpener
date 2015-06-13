@@ -76,8 +76,7 @@
                     "caption": "Open Default Options Settings",
                     "command": "open_file",
                     "args": {
-                        "file": "${packages}/HiveOpener/HiveOpenerOptions.sublime-settings",
-                        "platform": "Windows"
+                        "file": "${packages}/HiveOpener/HiveOpenerOptions.sublime-settings"
                     }
                 },
 
