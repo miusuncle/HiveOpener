@@ -81,6 +81,12 @@
     },
 
     {
+        "caption": "HiveOpener Setting: Toggle Copy URL on Open",
+        "command": "hive_open_switcher",
+        "args": { "toggle_copy_url_on_open": true }
+    },
+
+    {
         "caption": "HiveOpener Setting: Toggle Peek File on Highlight",
         "command": "hive_open_switcher",
         "args": { "toggle_peek_file_on_highlight": true }

@@ -18,6 +18,7 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
     def init(self):
         options = sublime.load_settings(OPTIONS_BASE_NAME)
         self.peek_file = gte_st3 and options.get('peek_file_on_highlight', False)
+        self.copy_url_on_open = options.get('copy_url_on_open', False)
         self.binfile_open_in_subl = options.get('open_binary_file_in_sublime', False)
 
         self.init_item_data()
@@ -81,8 +82,9 @@ class HiveOpenCommand(sublime_plugin.WindowCommand):
             self.restore_view()
 
     def open_url(self, url):
-        sublime.set_clipboard(url)
-        sublime.status_message('URL Copied: ' + url)
+        if self.copy_url_on_open:
+            sublime.set_clipboard(url)
+            sublime.status_message('URL Copied: `%s`' % url)
 
         if url[0:3] == 'www': url = 'http://' + url
         webbrowser.open_new_tab(url)

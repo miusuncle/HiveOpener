@@ -1,4 +1,5 @@
 {
     "peek_file_on_highlight": false,
+    "copy_url_on_open": false,
     "open_binary_file_in_sublime": false
 }
