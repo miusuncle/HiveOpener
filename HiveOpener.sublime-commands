@@ -1,71 +1,25 @@
 [
     {
-        "caption": "HiveOpener Command: Show File/Dir Open List",
-        "command": "hive_open"
-    },
-
-    {
-        "caption": "HiveOpener Command: Show URL Open List",
-        "command": "hive_url_open"
-    },
-
-    {
         "caption": "HiveOpener Command: Manage Open List",
         "command": "hive_manage_open_list"
     },
 
     {
-        "caption": "HiveOpener Command: Add `DIR` to Open List",
+        "caption": "HiveOpener Command: Add Item to Open List",
         "command": "hive_manage_open_list",
-        "args": { "cmd": "add_dir" }
+        "args": { "cmd": "add_item" }
     },
 
     {
-        "caption": "HiveOpener Command: Add `FILE` to Open List",
+        "caption": "HiveOpener Command: Edit Item from Open List",
         "command": "hive_manage_open_list",
-        "args": { "cmd": "add_file" }
+        "args": { "cmd": "edit_item" }
     },
 
     {
-        "caption": "HiveOpener Command: Add `URL` to Open List",
+        "caption": "HiveOpener Command: Remove Item from Open List",
         "command": "hive_manage_open_list",
-        "args": { "cmd": "add_url" }
-    },
-
-    {
-        "caption": "HiveOpener Command: Edit `DIR` from Open List",
-        "command": "hive_manage_open_list",
-        "args": { "cmd": "edit_dir" }
-    },
-
-    {
-        "caption": "HiveOpener Command: Edit `FILE` from Open List",
-        "command": "hive_manage_open_list",
-        "args": { "cmd": "edit_file" }
-    },
-
-    {
-        "caption": "HiveOpener Command: Edit `URL` from Open List",
-        "command": "hive_manage_open_list",
-        "args": { "cmd": "edit_url" }
-    },
-
-    {
-        "caption": "HiveOpener Command: Delete `DIR` from Open List",
-        "command": "hive_manage_open_list",
-        "args": { "cmd": "del_dir" }
-    },
-
-    {
-        "caption": "HiveOpener Command: Delete `FILE` from Open List",
-        "command": "hive_manage_open_list",
-        "args": { "cmd": "del_file" }
-    },
-
-    {
-        "caption": "HiveOpener Command: Delete `URL` from Open List",
-        "command": "hive_manage_open_list",
-        "args": { "cmd": "del_url" }
+        "args": { "cmd": "remove_item" }
     },
 
     {

@@ -1,6 +1,5 @@
 import sublime, sublime_plugin
 from os import path
-from functools import partial
 
 gte_st3 = int(sublime.version()) >= 3000
 
@@ -22,149 +21,120 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
             self.list_actions()
 
     def run_cmd(self):
-        delay = 400 if self.hive_cmd.startswith('add_') else 10
+        delay = 300 if self.hive_cmd.startswith('add_') else 10
         sublime.set_timeout(lambda: self.run(cmd=self.hive_cmd), delay)
 
     def init_vars(self):
-        self.cmd2idx = dict(
-            add_dir  = 0, add_file  = 1, add_url  = 2,
-            edit_dir = 3, edit_file = 4, edit_url = 5,
-            del_dir  = 6, del_file  = 7, del_url  = 8
-        )
-
+        self.conf = sublime.load_settings(CONFIG_BASE_NAME)
+        self.cmd2idx = dict(add_item=0, edit_item=1, remove_item=2)
         self.idx2cmd = dict((v, k) for k, v in self.cmd2idx.items())
+        self.raw_items = self.get_raw_items()
 
         self.action_list = [
             {
-                'name': 'Add `DIR` to Open List',
-                'onselect': 'show_input_panel',
-                'input_format': 'dirpath | description',
-                'input_checker': path.isdir,
-                'save_to': 'dirs'
+                'name': 'Add Item to Open List',
+                'onselect': 'show_input_panel'
             },
             {
-                'name': 'Add `FILE` to Open List',
-                'onselect': 'show_input_panel',
-                'input_format': 'filepath | description',
-                'input_checker': self.isfile,
-                'save_to': 'files'
+                'name': 'Edit Item from Open List',
+                'onselect': 'show_item_list'
             },
             {
-                'name': 'Add `URL` to Open List',
-                'onselect': 'show_input_panel',
-                'input_format': 'urlpath | description',
-                'input_checker': self.isurl,
-                'save_to': 'urls'
-            },
-
-            {
-                'name': 'Edit `DIR` from Open List',
-                'onselect': 'show_item_list',
-                'input_format': 'dirpath | description',
-                'input_checker': path.isdir,
-                'save_to': 'dirs',
-                'command': 'edit'
-            },
-            {
-                'name': 'Edit `FILE` from Open List',
-                'onselect': 'show_item_list',
-                'input_format': 'filepath | description',
-                'input_checker': self.isfile,
-                'save_to': 'files',
-                'command': 'edit'
-            },
-            {
-                'name': 'Edit `URL` from Open List',
-                'onselect': 'show_item_list',
-                'input_format': 'urlpath | description',
-                'input_checker': self.isurl,
-                'save_to': 'urls',
-                'command': 'edit'
-            },
-
-            {
-                'name': 'Delete `DIR` from Open List',
-                'onselect': 'show_item_list',
-                'save_to': 'dirs',
-                'command': 'delete'
-            },
-            {
-                'name': 'Delete `FILE` from Open List',
-                'onselect': 'show_item_list',
-                'save_to': 'files',
-                'command': 'delete'
-            },
-            {
-                'name': 'Delete `URL` from Open List',
-                'onselect': 'show_item_list',
-                'save_to': 'urls',
-                'command': 'delete'
+                'name': 'Remove Item from Open List',
+                'onselect': 'show_item_list'
             }
         ]
 
     def list_actions(self):
-        actions = [item['name'] for item in self.action_list]
-        self.window.show_quick_panel(actions, self.on_select_action, sublime.MONOSPACE_FONT)
+        action_list = self.action_list if self.raw_items else self.action_list[0:1]
+        actions = [item['name'] for item in action_list]
+        self.window.show_quick_panel(actions, self.on_select_action)
 
     def on_select_action(self, index):
         if index == -1: return
-        item = self.action_list[index]
+
         self.hive_cmd = self.idx2cmd[index]
-        getattr(self, item['onselect'])(item)
+        self.hive_action = self.action_list[index]
 
-    def show_item_list(self, item):
-        self.conf = sublime.load_settings(CONFIG_BASE_NAME)
-        self.itemoption = item
-        self.itemlist = self.conf.get(item['save_to'], [])
+        getattr(self, self.hive_action['onselect'])()
 
-        listtype = item['save_to'][:-1].upper()
-        viewlist = self.build_view_list(self.itemlist, listtype)
+    def show_item_list(self):
+        view_items = self.build_view_items()
+        down_arrows = u'\u2193 ' * 3
 
-        viewlist = [[u'\u2190 Back', '>_ SHOW MAIN MENU']] + viewlist
-        self.window.show_quick_panel(viewlist, self.on_select_item)
+        if self.hive_cmd == 'edit_item':
+            first_item = [u'\u2190 Back', down_arrows + u'Edit Item(s) Below ' + down_arrows]
 
-    def build_view_list(self, rawlist, type):
+        if self.hive_cmd == 'remove_item':
+            first_item = [u'\u2190 Back', down_arrows + u'Remove Item(s) Below ' + down_arrows]
+
+        view_items = [first_item] + view_items
+
+        self.window.show_quick_panel(view_items, self.on_select_item)
+
+    def get_raw_items(self):
         result = []
 
-        for (pathname, desc) in rawlist:
-            if not desc:
-                basename = path.basename(pathname)
-                desc = pathname if type == 'URL' else basename or pathname
+        for key in ('dirs', 'files', 'urls'):
+            if not self.conf.has(key): continue
+            result.extend(self.conf.get(key))
 
-            label = self.guess_file_type(pathname) if type == 'FILE' else type
-            pathname = '%s %s' % (label, pathname)
-            result.append([desc, pathname])
+        # sort items alphabetically
+        result.sort(key=lambda x: x[1].lower())
+        return result
+
+    def build_view_items(self):
+        result = []
+
+        for (pathname, desc) in self.raw_items:
+            title = desc
+
+            if not title:
+                if self.isfile(pathname):
+                    title = path.basename(pathname) or pathname
+                else:
+                    title = pathname
+
+            subtitle = '%s %s' % (self.get_item_type(pathname), pathname)
+            result.append([title, subtitle])
 
         return result
 
-    def guess_file_type(self, pathname):
-        basename = path.basename(pathname)
-        name, ext = path.splitext(basename)
-        return ext[1:].upper() or 'FILE'
-
     def on_select_item(self, index):
+        # triggered `escape` or `back`
         if index in [-1, 0]: return self.run()
-        self.hive_index = index - 1
-        path, desc = self.itemlist[self.hive_index]
+        currpath, currdesc = self.raw_items[index - 1]
 
-        if self.itemoption['command'] == 'edit':
-            item = self.itemoption.copy()
-            item.update(dict(init_text=' | '.join([path, desc])))
-            self.show_input_panel(item)
+        self.hive_raw_path = currpath
+        self.hive_raw_type = self.get_item_raw_type(currpath)
+        dest = self.conf.get(self.hive_raw_type, [])
+        self.hive_raw_index = self.index_in_list(currpath, dest)
 
-        if self.itemoption['command'] == 'delete':
-            self.itemlist.pop(self.hive_index)
-            self.conf.set(self.itemoption['save_to'], self.itemlist)
+        if self.hive_cmd == 'edit_item':
+            self.show_input_panel(dict(path=currpath, desc=currdesc))
+
+        if self.hive_cmd == 'remove_item':
+            dest.pop(self.hive_raw_index)
+
+            self.conf.set(self.hive_raw_type, dest)
             sublime.save_settings(CONFIG_BASE_NAME)
-            sublime.status_message('Item `%s` has been deleted from open list.' % path)
-            self.run_cmd()
 
-    def show_input_panel(self, item):
-        caption = '%s ( %s ):' % (item['name'], item['input_format'])
-        init_text = item.get('init_text', '')
-        checker, save_to = item['input_checker'], item['save_to']
+            sublime.status_message('Item `%s` has been deleted from open list.' % currpath)
+            self.run_cmd() if self.get_raw_items() else self.run()
 
-        on_done = partial(self.on_input_info, checker, save_to)
+    def show_input_panel(self, itemdata=None):
+        caption = '%s ( %s ):' % (self.hive_action['name'], 'path | description')
+
+        if itemdata is None:
+            init_text = ''
+        else:
+            if itemdata['desc']:
+                init_text = '%s | %s' % (itemdata['path'], itemdata['desc'])
+            else:
+                init_text = itemdata['path']
+
+        on_done = self.on_input_info
+        # on_cancel = None
         on_cancel = self.run if self.hive_cmd.startswith('add_') else self.run_cmd
 
         if gte_st3:
@@ -172,46 +142,77 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
         else:
             self.window.show_input_panel(caption, init_text, on_done, None, on_cancel)
 
-    def on_input_info(self, checker, save_to, input_text):
-        path, desc = self.split_by_pipe(input_text)
+    def on_input_info(self, input_text):
+        path, desc = self.split_via_pipe(input_text)
 
-        if checker is None or checker(path):
-            conf = sublime.load_settings(CONFIG_BASE_NAME)
-            dest = conf.get(save_to, [])
+        if self.isurl(path): save_to = 'urls'
+        elif self.isfile(path): save_to = 'files'
+        elif self.isdir(path): save_to = 'dirs'
+        else: save_to = None
+
+        if save_to is None:
+            sublime.status_message('Invalid input, action abort.')
+            self.run_cmd()
+        else:
+            if self.hive_cmd == 'edit_item':
+                dest = self.conf.get(self.hive_raw_type, [])
+                # remove it first
+                dest.pop(self.hive_raw_index)
+                self.conf.set(self.hive_raw_type, dest)
+
+            dest = self.conf.get(save_to, [])
             index = self.index_in_list(path, dest)
+            item = [path, desc]
 
-            if self.hive_cmd.startswith('edit_'):
-                dest[self.hive_index] = [path, desc]
+            if self.hive_cmd == 'edit_item' and save_to == self.hive_raw_type:
+                if index == -1:
+                    dest.insert(self.hive_raw_index, item)
+                else:
+                    dest[index] = item
+
             elif index == -1:
-                dest.append([path, desc])
+                dest.append(item)
             else:
-                dest[index] = [path, desc]
+                dest[index] = item
 
-            conf.set(save_to, dest)
+            self.conf.set(save_to, dest)
             sublime.save_settings(CONFIG_BASE_NAME)
             sublime.status_message('Item `%s` has been add to open list.' % path)
 
-        else:
-            sublime.status_message('Invalid input, action abort.')
+            self.run_cmd() if self.hive_cmd == 'edit_item' else self.run()
 
-        self.run_cmd()
+    def get_item_raw_type(self, pathname):
+        if self.isurl(pathname): return 'urls'
+        if self.isfile(pathname): return 'files'
+        if self.isdir(pathname): return 'dirs'
+
+    def get_item_type(self, pathname):
+        if self.isurl(pathname): return 'URL'
+
+        if self.isfile(pathname):
+            name, ext = path.splitext(pathname)
+            return ext[1:].upper() or 'FILE'
+
+        if self.isdir(pathname): return 'DIR'
+        return 'UNKNOWN'
 
     def index_in_list(self, needle, haystack):
         haystack = [item[0] for item in haystack]
         return haystack.index(needle) if needle in haystack else -1
 
-    def split_by_pipe(self, text):
+    def split_via_pipe(self, text):
         if '|' not in text: text += '|'
         first, rest = text.strip().split('|', 1)
         return [first.strip('"\' '), rest.strip('"\' ')]
 
+    def isurl(self, target): return bool(REX_URL.match(target))
+
     def isfile(self, target):
         name, ext = path.splitext(target)
+
         if SUBLIME_PLATFORM == 'osx' and ext == '.app':
             return True
 
         return path.isfile(target)
 
-    def isurl(self, target):
-        return bool(REX_URL.match(target))
-
+    def isdir(self, target): return path.isdir(target)
