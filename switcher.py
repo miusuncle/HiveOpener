@@ -10,30 +10,26 @@ else:
 
 class HiveOpenSwitcherCommand(sublime_plugin.WindowCommand):
     def run(self, **args):
-        print(args)
-        if 'toggle_peek_file_on_highlight' in args:
-            self.toggle_peek_file()
+        known_options = [
+            'toggle_peek_file_on_highlight',
+            'toggle_copy_url_on_open',
+            'open_binary_file_in_sublime'
+        ]
 
-        if 'toggle_copy_url_on_open' in args:
-            self.toggle_copy_url()
+        self.options = sublime.load_settings(OPTIONS_BASE_NAME)
 
-        if 'open_binary_file_in_sublime' in args:
-            binfile_open_in_subl = args.get('open_binary_file_in_sublime')
-            self.set_open_binary_file(binfile_open_in_subl)
+        for optname in args.keys():
+            if optname not in known_options: continue
 
-    def toggle_peek_file(self):
-        options = sublime.load_settings(OPTIONS_BASE_NAME)
-        peek_file = not options.get('peek_file_on_highlight', False)
-        options.set('peek_file_on_highlight', peek_file)
-        sublime.save_settings(OPTIONS_BASE_NAME)
+            if optname.startswith('toggle_'):
+                optname = optname.replace('toggle_', '')
+                optval = not self.options.get(optname)
+            else:
+                optval = args.get(optname)
 
-    def toggle_copy_url(self):
-        options = sublime.load_settings(OPTIONS_BASE_NAME)
-        peek_file = not options.get('toggle_copy_url_on_open', False)
-        options.set('toggle_copy_url_on_open', peek_file)
-        sublime.save_settings(OPTIONS_BASE_NAME)
+            self.set_optval(optname, optval)
 
-    def set_open_binary_file(self, value):
-        options = sublime.load_settings(OPTIONS_BASE_NAME)
-        options.set('open_binary_file_in_sublime', value)
+    def set_optval(self, optname, optval):
+        self.options.set(optname, optval)
+        sublime.status_message('`%s`\'s new value is: %s.' % (optname, optval))
         sublime.save_settings(OPTIONS_BASE_NAME)
