@@ -41,6 +41,12 @@
     },
 
     {
+        "caption": "HiveOpener Setting: Toggle Show Edit Item Option",
+        "command": "hive_open_switcher",
+        "args": { "toggle_show_edit_item_option": true }
+    },
+
+    {
         "caption": "HiveOpener Setting: Toggle Peek File on Highlight",
         "command": "hive_open_switcher",
         "args": { "toggle_peek_file_on_highlight": true }

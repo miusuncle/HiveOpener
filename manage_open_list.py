@@ -14,9 +14,12 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
         if 'cmd' in args:
             cmd = args.get('cmd')
-            index = self.cmd2idx.get(cmd)
-            if index is not None:
+            index = self.index_from_command(cmd)
+
+            if index != -1:
                 self.on_select_action(index)
+            else:
+                sublime.status_message('Unknown command, action abort.')
         else:
             self.list_actions()
 
@@ -26,37 +29,49 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
 
     def init_vars(self):
         self.conf = sublime.load_settings(CONFIG_BASE_NAME)
-        self.cmd2idx = dict(add_item=0, edit_item=1, remove_item=2)
-        self.idx2cmd = dict((v, k) for k, v in self.cmd2idx.items())
         self.raw_items = self.get_raw_items()
 
         self.action_list = [
             {
+                'command': 'add_item',
                 'name': 'Add Item to Open List',
                 'onselect': 'show_input_panel'
             },
             {
+                'command': 'edit_item',
                 'name': 'Edit Item from Open List',
                 'onselect': 'show_item_list'
             },
             {
+                'command': 'remove_item',
                 'name': 'Remove Item from Open List',
                 'onselect': 'show_item_list'
             }
         ]
 
+        options = sublime.load_settings(OPTIONS_BASE_NAME)
+        show_edit_item = gte_st3 and options.get('show_edit_item_option', False)
+
+        if not show_edit_item: self.action_list.pop(1)
+        if not self.raw_items: self.action_list = self.action_list[0:1]
+
     def list_actions(self):
-        action_list = self.action_list if self.raw_items else self.action_list[0:1]
-        actions = [item['name'] for item in action_list]
+        actions = [item['name'] for item in self.action_list]
         self.window.show_quick_panel(actions, self.on_select_action)
 
     def on_select_action(self, index):
         if index == -1: return
 
-        self.hive_cmd = self.idx2cmd[index]
         self.hive_action = self.action_list[index]
+        self.hive_cmd = self.hive_action['command']
 
         getattr(self, self.hive_action['onselect'])()
+
+    def index_from_command(self, command):
+        for (index, action) in enumerate(self.action_list):
+            if command == action['command']:
+                return index
+        else: return -1
 
     def show_item_list(self):
         view_items = self.build_view_items()
