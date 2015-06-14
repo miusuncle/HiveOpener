@@ -217,6 +217,10 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
     def split_via_pipe(self, text):
         if '|' not in text: text += '|'
         first, rest = text.strip().split('|', 1)
+
+        # do some favor on windows, replace double backslashes with single ones
+        first = first.replace(r'\\', '\\')
+
         return [first.strip('"\' '), rest.strip('"\' ')]
 
     def isurl(self, target): return bool(REX_URL.match(target))
