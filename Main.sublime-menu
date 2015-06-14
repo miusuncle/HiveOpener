@@ -5,48 +5,34 @@
             "caption": "Hive Opener",
             "children": [
                 {
-                    "caption": "Show Universal Open List",
-                    "command": "hive_open"
-                },
-
-                {
-                    "caption": "Show URL Open List",
-                    "command": "hive_url_open"
-                },
-
-                { "caption": "-" },
-                {
                     "caption": "Manage Open List",
                     "command": "hive_manage_open_list"
                 },
 
                 {
-                    "caption": "Add Item to Open List",
-                    "command": "hive_manage_open_list",
-                    "args": { "cmd": "add_item" }
-                },
-                {
-                    "caption": "Edit Item from Open List",
-                    "command": "hive_manage_open_list",
-                    "args": { "cmd": "edit_item" }
-                },
-                {
-                    "caption": "Remove Item from Open List",
-                    "command": "hive_manage_open_list",
-                    "args": { "cmd": "remove_item" }
+                    "caption": "Show Open List",
+                    "command": "hive_open"
                 },
 
                 { "caption": "-" },
                 {
-                    "caption": "Open Default Options Settings",
+                    "caption": "Options Settings - Default",
                     "command": "open_file",
                     "args": {
                         "file": "${packages}/HiveOpener/HiveOpenerOptions.sublime-settings"
                     }
                 },
-
                 {
-                    "caption": "Open Default Config Settings",
+                    "caption": "Options Settings - User",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/User/HiveOpenerOptions.sublime-settings"
+                    }
+                },
+
+                { "caption": "-" },
+                {
+                    "caption": "Config Settings - Default",
                     "command": "open_file",
                     "args": {
                         "file": "${packages}/HiveOpener/HiveOpenerConfig (Windows).sublime-settings",
@@ -54,16 +40,15 @@
                     }
                 },
                 {
-                    "caption": "Open Default Config Settings",
+                    "caption": "Config Settings - Default",
                     "command": "open_file",
                     "args": {
                         "file": "${packages}/HiveOpener/HiveOpenerConfig (OSX).sublime-settings",
                         "platform": "OSX"
                     }
                 },
-
                 {
-                    "caption": "Open User Config Settings",
+                    "caption": "Config Settings - User",
                     "command": "open_file",
                     "args": {
                         "file": "${packages}/User/HiveOpenerConfig.sublime-settings"
