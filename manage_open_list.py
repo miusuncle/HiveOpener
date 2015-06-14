@@ -50,7 +50,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
         ]
 
         options = sublime.load_settings(OPTIONS_BASE_NAME)
-        show_edit_item = gte_st3 and options.get('show_edit_item_option', False)
+        show_edit_item = options.get('show_edit_item_option', False)
 
         if not show_edit_item: self.action_list.pop(1)
         if not self.raw_items: self.action_list = self.action_list[0:1]
@@ -149,7 +149,6 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
                 init_text = itemdata['path']
 
         on_done = self.on_input_info
-        # on_cancel = None
         on_cancel = self.run if self.hive_cmd.startswith('add_') else self.run_cmd
 
         if gte_st3:
