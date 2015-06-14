@@ -16,22 +16,6 @@
 
                 { "caption": "-" },
                 {
-                    "caption": "Options Settings - Default",
-                    "command": "open_file",
-                    "args": {
-                        "file": "${packages}/HiveOpener/HiveOpenerOptions.sublime-settings"
-                    }
-                },
-                {
-                    "caption": "Options Settings - User",
-                    "command": "open_file",
-                    "args": {
-                        "file": "${packages}/User/HiveOpenerOptions.sublime-settings"
-                    }
-                },
-
-                { "caption": "-" },
-                {
                     "caption": "Config Settings - Default",
                     "command": "open_file",
                     "args": {
@@ -52,6 +36,22 @@
                     "command": "open_file",
                     "args": {
                         "file": "${packages}/User/HiveOpenerConfig.sublime-settings"
+                    }
+                },
+
+                { "caption": "-" },
+                {
+                    "caption": "Options Settings - Default",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/HiveOpener/HiveOpenerOptions.sublime-settings"
+                    }
+                },
+                {
+                    "caption": "Options Settings - User",
+                    "command": "open_file",
+                    "args": {
+                        "file": "${packages}/User/HiveOpenerOptions.sublime-settings"
                     }
                 },
 
