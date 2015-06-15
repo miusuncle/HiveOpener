@@ -90,7 +90,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
     def get_raw_items(self):
         result = []
 
-        for key in ('dirs', 'files', 'urls'):
+        for key in DEFAULT_ITEM_TYPES:
             if not self.conf.has(key): continue
             result.extend(self.conf.get(key))
 

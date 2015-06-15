@@ -11,25 +11,31 @@ else:
     from config import *
 
 class HiveOpenCommand(sublime_plugin.WindowCommand):
-    def run(self):
-        self.init()
+    def run(self, **args):
+        self.init(**args)
         self.show_quick_panel()
 
-    def init(self):
+    def init(self, **args):
         options = sublime.load_settings(OPTIONS_BASE_NAME)
         self.peek_file = gte_st3 and options.get('peek_file_on_highlight', False)
         self.copy_url_on_open = options.get('copy_url_on_open', False)
         self.binfile_open_in_subl = options.get('open_binary_file_in_sublime', False)
 
+        self.init_item_types(args.get('item_types'))
         self.init_item_data()
+
         if self.peek_file: self.save_view()
+
+    def init_item_types(self, item_types):
+        if not item_types: item_types = DEFAULT_ITEM_TYPES
+        self.item_types = list(set(item_types) & set(DEFAULT_ITEM_TYPES))
 
     def init_item_data(self):
         conf = sublime.load_settings(CONFIG_BASE_NAME)
         self.items = []
         self.view_items = []
 
-        for key in ('dirs', 'files', 'urls'):
+        for key in self.item_types:
             if not conf.has(key): continue
             self.items.extend(conf.get(key))
 

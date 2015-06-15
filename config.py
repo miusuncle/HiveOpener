@@ -5,6 +5,8 @@ SUBLIME_PLATFORM = sublime.platform()
 OPTIONS_BASE_NAME = 'HiveOpenerOptions.sublime-settings'
 CONFIG_BASE_NAME = 'HiveOpenerConfig.sublime-settings'
 
+DEFAULT_ITEM_TYPES = ['dirs', 'files', 'urls']
+
 REX_URL = re.compile(
     r'''(?x)
     \b(?:
