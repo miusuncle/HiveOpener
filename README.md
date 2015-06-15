@@ -1,8 +1,8 @@
 #HiveOpener
 
-## 综述
+## 概述
 
-这是一个Sublime Text插件，你可以使用它在Sublime Text中方便快速地打开文件、文件夹或网址。当然，前提是你需要事先配置好指定文件、文件夹或网址的基本信息。一切都很简单，让我们先从安装说起吧。
+这是一个Sublime Text`(简称ST)`插件，你可以使用它在ST中方便快速地打开文件、文件夹或网址。当然，前提是你需要事先配置好指定文件、文件夹或网址的基本信息。一切都很简单，让我们先从安装说起吧。
 
 ## 安装
 
@@ -19,7 +19,7 @@
 
 ### 方法二：手动安装
 
-首先，用`git`命令克隆本插件，或直接下载并解压本插件。然后将文件夹重命名为`HiveOpener`，拷贝或剪切该文件夹。执行菜单命令`Browse Packages`，打开 `Packages`目录，将事先拷贝的`HiveOpener`文件夹粘贴至那个目录即可。
+首先，用`git`命令克隆本插件，或直接下载zip包并解压。然后将文件夹重命名为`HiveOpener`，拷贝或剪切该文件夹。执行菜单命令`Browse Packages`，打开 `Packages`目录，将拷贝的`HiveOpener`文件夹粘贴至那个目录即可。
 
 安装成功后，你可以在`Tools`主菜单项下看到多了一个`Hive Opener`子菜单项。
 
@@ -29,11 +29,11 @@
 
 你可以通过这个功能添加或移除文件（文件夹、网址）信息，该功能对应菜单命令`Tools > HiveOpener > Manage Open List`。执行该菜单命令，弹出选项面板，如下所示：
 
-![](assets/images/manage_open_list.png)
+![Manage Open List Panel](assets/images/manage_open_list.png)
 
 选择`Add Item to Open List`，将弹出如下输入面板：
 
-![](assets/images/input_panel.png)
+![Add Item to Open List](assets/images/input_panel.png)
 
 在此你可以输入希望打开的文件（文件夹、网址）路径信息，后跟**可选的**描述信息，路径信息和描述信息以` | `分隔，请看如下示例：
 
@@ -90,7 +90,7 @@
 
 `show_edit_item_option: `是否显示编辑配置项选项，该值设为`true`的话，执行菜单命令`Tools > HiveOpener > Manage Open List`，你将看到如下面板：
 
-![](assets/images/manage_open_list_full.png)
+![Manage Open List Panel - Full](assets/images/manage_open_list_full.png)
 
 可以看到，`Edit Item from Open List`选项已激活可用。
 
@@ -101,6 +101,14 @@
 `open_binary_file_in_sublime: `执行打开操作时是否希望二进制文件在Sublime Text中打开
 
 如果你希望更改默认选项设置，建议将默认设置拷贝到用户自定义选项设置文件中再进行覆盖设置操作。用户自定义选项设置文件可以执行菜单命令`Tools > HiveOpener > Options Settings - User`打开。
+
+当然，你也可以通过命令来更改默认选项设置，执行菜单命令`Tools > Command Palette...`，然后输入`HiveOpener Setting: `，你将看到如下命令显示在面板中：
+
+![Options Settings in Command Palette](assets/images/hive_options_in_command_palette.png)
+
+选中一个命令后，你将看到类似下面的提示信息显示在状态栏中：
+
+![Options Settings Message Shown in Status Bar](assets/images/hive_options_message_in_status_bar.png)
 
 ## 最佳实践
 
@@ -120,10 +128,10 @@
 
 如果你希望修改默认快捷键，建议将默认快捷键拷贝到用户自定义快捷键文件中再重新设定。用户自定义快捷键文件可以执行菜单命令`Tools > HiveOpener > Key Bindings - User`打开。
 
-另外，如果你希望打开**网址专用**配置项列表的话，添加以下配置到用户自定义快捷键文件中即可。
+另外，如果你希望打开**网址专用**配置项列表的话，添加以下配置到用户自定义快捷键文件中即可（注：`item_types`的值可以是`dirs`、`files`和`urls`的任意组合）。
 
 ```json
-{ "keys": ["f12"], "command": "hive_url_open" }
+{ "keys": ["f12"], "command": "hive_open", "args": { "item_types": ["urls"] } }
 ```
 
 配置完毕后，按`F12`键，你将看到单独显示网址配置项的列表面板出来了。
@@ -132,4 +140,4 @@
 
 平时工作中，由于经常性地需要打开一些常用的文件、目录和网址，作为ST重度使用用户，于是便有了这个插件的诞生。
 
-最后，如果你也是ST的忠实粉丝，如果你认为这也是你觉得可(`Bi`)以(`Xu`)有的功(`Te`)能(`Xiao`)，现在就开始`Duang`起来吧！
+最后，如果你也是ST的忠实粉丝，如果你认为这也是你觉得可`(Bi)`以`(Xu)`有的功`(Te)`能`(Xiao)`，现在就开始`Duang`起来吧！
