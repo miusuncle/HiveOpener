@@ -30,7 +30,8 @@ class HiveOpenSwitcherCommand(sublime_plugin.WindowCommand):
 
             self.set_optval(optname, optval)
 
+        sublime.save_settings(OPTIONS_BASE_NAME)
+
     def set_optval(self, optname, optval):
         self.options.set(optname, optval)
         sublime.status_message('`%s`\'s new value is: %s' % (optname, optval))
-        sublime.save_settings(OPTIONS_BASE_NAME)
