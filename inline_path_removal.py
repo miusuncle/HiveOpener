@@ -21,9 +21,7 @@ class HiveInlinePathRemovalBaseCommand(sublime_plugin.TextCommand):
             sublime.status_message('Dir `%s` has been removed from open list.' % quoted_str)
 
     def is_visible(self, event=None):
-        filename = self.view.file_name() or ''
-        basename = path.basename(filename)
-        if basename != CONFIG_BASE_NAME: return False
+        if not self.in_config_file(): return False
 
         quoted_str = self.find_quoted_str(event)
         if quoted_str is None: return False
@@ -34,6 +32,7 @@ class HiveInlinePathRemovalBaseCommand(sublime_plugin.TextCommand):
             return False
 
     def description(self, event=None):
+        if not self.in_config_file(): return ''
         quoted_str = self.find_quoted_str(event)
 
         if isfile(quoted_str):
@@ -73,6 +72,10 @@ class HiveInlinePathRemovalBaseCommand(sublime_plugin.TextCommand):
 
         return None
 
+    def in_config_file(self):
+        filename = self.view.file_name() or ''
+        basename = path.basename(filename)
+        return basename == CONFIG_BASE_NAME
 
 if gte_st3:
 
