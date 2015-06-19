@@ -149,7 +149,7 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
                 init_text = itemdata['path']
 
         on_done = self.on_input_info
-        on_cancel = self.run if self.hive_cmd.startswith('add_') else self.run_cmd
+        on_cancel = None if self.hive_cmd == 'add_item' else self.run_cmd
 
         if gte_st3:
             self.window.show_input_panel(caption, init_text, on_done, None, on_cancel=on_cancel)
@@ -193,7 +193,8 @@ class HiveManageOpenListCommand(sublime_plugin.WindowCommand):
             sublime.save_settings(CONFIG_BASE_NAME)
             sublime.status_message('Item `%s` has been added to open list.' % path)
 
-            self.run_cmd() if self.hive_cmd == 'edit_item' else self.run()
+            if self.hive_cmd == 'edit_item':
+                self.run_cmd()
 
     def get_item_raw_type(self, pathname):
         if self.isurl(pathname): return 'urls'
