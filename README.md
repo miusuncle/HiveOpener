@@ -1,4 +1,4 @@
-#HiveOpener
+# HiveOpener
 
 ## 概述
 
@@ -14,8 +14,8 @@
 
 我们推荐使用[package control](https://packagecontrol.io/)来安装ST插件。要安装本插件，执行以下步骤：
 
- - 执行菜单命令`Tools(工具) > Command Palette(命令面板)`，然后输入`Package Control: Install Package`
- - 在随后弹出的面板中搜索`HiveOpener`进行安装即可
+- 执行菜单命令`Tools(工具) > Command Palette(命令面板)`，然后输入`Package Control: Install Package`
+- 在随后弹出的面板中搜索`HiveOpener`进行安装即可
 
 ### 方法二：手动安装
 
@@ -25,7 +25,7 @@
 
 ## 基本功能
 
-### 添加/移除配置项
+### 添加、移除配置项
 
 你可以通过这个功能添加或移除文件（文件夹、网址）信息，该功能对应菜单命令`Tools > HiveOpener > Manage Open List`。执行该菜单命令，弹出选项面板，如下所示：
 
@@ -37,13 +37,13 @@
 
 在此你可以输入希望打开的文件（文件夹、网址）路径信息，后跟**可选的**描述信息，路径信息和描述信息以` | `分隔，请看如下示例：
 
- - 添加文件（不包含描述）：`/etc/hosts`
- - 添加文件（包含描述）：`C:\Windows\System32\calc.exe | calc`
- - 添加文件夹（不包含描述）：`/Users/miusuncle/Desktop`
- - 添加文件夹（包含描述）：`/Users/miusuncle/ | home`
- - 添加文件夹（包含描述）：`/Users/miusuncle/Desktop | desktop`
- - 添加网址（不包含描述）：`http://sosilence.info/`
- - 添加网址（包含描述）：`www.baidu.com | baidu`
+- 添加文件（不包含描述）：`/etc/hosts`
+- 添加文件（包含描述）：`C:\Windows\System32\calc.exe | calc`
+- 添加文件夹（不包含描述）：`/Users/miusuncle/Desktop`
+- 添加文件夹（包含描述）：`/Users/miusuncle/ | home`
+- 添加文件夹（包含描述）：`/Users/miusuncle/Desktop | desktop`
+- 添加网址（不包含描述）：`http://sosilence.info/`
+- 添加网址（包含描述）：`www.baidu.com | baidu`
 
 只有在操作系统中存在的文件（文件夹）或合法的网址才能成功添加到配置文件中。 添加文件不限于文本文件，你还可以添加像以`.exe|.pdf|.doc|.app`等后缀结尾的可执行文件或二进制文件等。
 
@@ -57,11 +57,11 @@
 
 添加配置项后，接下来你可以使用本插件的核心功能了，即打开配置项。执行菜单命令`Tools > HiveOpener > Show Open List`，呈现在你面前的是一个包括所有配置项的列表面板。搜索过滤你希望打开的配置项吧，一切都是那样地自然顺手：
 
- - 文件夹（用户、桌面等常用目录）将在资源管理器（或Finder）中打开
- - 文本文件（备忘录、配置文件等）将在Sublime Text中打开
- - 可执行文件（像计算器、记事本、邮件客户端等）也得以迅速打开
- - 快速打开二进制文档（像PDF、DOCX什么的）也不是事了
- - 网址将在你设置的默认浏览器中打开（再也没有比这个访问[王阿姨博客](http://sosilence.info/)更快捷的方法了）
+- 文件夹（用户、桌面等常用目录）将在资源管理器（或Finder）中打开
+- 文本文件（备忘录、配置文件等）将在Sublime Text中打开
+- 可执行文件（像计算器、记事本、邮件客户端等）也得以迅速打开
+- 快速打开二进制文档（像PDF、DOCX什么的）也不是事了
+- 网址将在你设置的默认浏览器中打开（再也没有比这个访问[王阿姨博客](http://sosilence.info/)更快捷的方法了）
 
 ## 扩展功能
 
